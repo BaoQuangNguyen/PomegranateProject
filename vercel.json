@@ -4,7 +4,7 @@
       {
         "src": "pomegranate_technique/wsgi.py",
         "use": "@vercel/python",
-        "config": { "maxLambdaSize": "15mb", "runtime": "python3" }
+        "config": { "maxLambdaSize": "15mb", "runtime": "python3", "python": "3.9", "pip": "pip3" }
       },
       {
         "src": "main_app/build_files.sh",

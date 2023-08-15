@@ -1,0 +1,27 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "pomegranate_technique/wsgi.py",
+        "use": "@vercel/python",
+        "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+      },
+      {
+        "src": "main_app/build_files.sh",
+        "use": "@vercel/static-build",
+        "config": {
+          "distDir": "staticfiles_build"
+        }
+      }
+    ],
+    "routes": [
+      {
+        "src": "/static/main_app(.*)",
+        "dest": "main_app/static/$1"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "pomegranate_technique/wsgi.py"
+      }
+    ]
+  }

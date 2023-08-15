@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Task Details</h1>
+
+<div class="row">
+  <div class="col s6">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ task.title }}</span>
+        <p>Description: {{ task.description | linebreaks }}</p>
+        <p>Due: {{ task.due_date }}</p>
+      </div>
+      <div class="card-action">
+        <a href="{% url 'tasks_update' task.id %}">Edit</a>
+        <a href="{% url 'tasks_delete' task.id %}">Delete</a>
+      </div>
+    </div>
+  </div>
+  <div class="col s6">
+    <table class="striped">
+      <thead>
+        <tr><th>Updated</th><th>Pomegranates Completed</th><th>Breaks Taken</th><th>Completed</th></tr>
+      </thead>
+      <tbody>
+        {% for status in task.status_set.all %}
+          <tr>
+            <td>{{ status.created }}</td>
+            <td>{{ status.pomegranates_completed }}</td>
+            <td>{{ status.breaks }}</td>
+            <td>
+              {% if status.complete %}
+                Yes!
+              {% else %}
+                Not yet!
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

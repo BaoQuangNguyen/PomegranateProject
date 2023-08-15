@@ -75,9 +75,12 @@ WSGI_APPLICATION = 'pomegranate_technique.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pomegranate',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "verceldb",
+        "USER": "default",
+        "PASSWORD": "dxL5eg1ZkiFr",
+        "HOST": "ep-rapid-resonance-55185083-pooler.us-east-1.postgres.vercel-storage.com",
     }
 }
 

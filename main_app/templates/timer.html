@@ -41,14 +41,12 @@ const productivitySecondsInput = document.getElementById('productivity-seconds')
 const updateMessage = document.getElementById('update-message');
 
 let timerInterval;
-let totalTimeInSeconds = 0; // Initial value, will be set based on user input
+let totalTimeInSeconds = 0;
 
 let isPaused = false;
 
-// Get the task ID from the URL query parameter
 const urlParams = new URLSearchParams(window.location.search);
 const task_id = urlParams.get('task');
-console.log('Task ID:', task_id);
 
 function updateTimerDisplay(timeInSeconds) {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -73,7 +71,23 @@ function startTimer() {
         } else if (totalTimeInSeconds === 0) {
             clearInterval(timerInterval);
             finishedButton.style.display = 'block';
-            console.log('Productivity timer reached 0. Task has been successfully updated.');
+
+            fetch(`/update-pomegranates/${task_id}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('pomegranates_completed updated successfully.');
+                } else {
+                    console.error('Error updating pomegranates_completed.');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
         }
     }, 1000);
 }
@@ -90,49 +104,16 @@ function resetTimer() {
     startButton.disabled = false;
     pauseButton.disabled = true;
     finishedButton.style.display = 'none';
-    productivityMinutesInput.value = 5; // Reset to default productivity minutes
-    productivitySecondsInput.value = 0; // Reset to default productivity seconds
+    productivityMinutesInput.value = 5;
+    productivitySecondsInput.value = 0;
     totalTimeInSeconds = 0;
     updateTimerDisplay(totalTimeInSeconds);
     updateMessage.style.display = 'none';
 }
 
-function finishTask() {
-    // Send an AJAX request to update task attributes
-    if (task_id !== '') {
-        const url = `/tasks/${task_id}/update_status/`;
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
-            }
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('Task updated successfully.');
-                updateMessage.textContent = 'Task updated successfully.';
-                updateMessage.style.color = 'green';
-                updateMessage.style.display = 'block';
-                // Redirect to task results page
-                window.location.href = `/tasks/${task_id}/results/`;
-            } else {
-                console.error('Error updating task.');
-                updateMessage.textContent = 'Error updating task.';
-                updateMessage.style.color = 'red';
-                updateMessage.style.display = 'block';
-            }
-        })
-        .catch(error => {
-            console.error(error);
-            updateMessage.textContent = 'An error occurred.';
-            updateMessage.style.color = 'red';
-            updateMessage.style.display = 'block';
-        });
-    }
-}
+
 
 function startBreak() {
-    // Redirect to the breaktimer.html page with the task ID as a query parameter
     window.location.href = `/breaktimer/?task=${task_id}`;
 }
 
@@ -142,14 +123,12 @@ resetButton.addEventListener('click', resetTimer);
 finishedButton.addEventListener('click', finishTask);
 startBreakButton.addEventListener('click', startBreak);
 
-// Function to get CSRF token from cookies
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
             const cookie = cookies[i].trim();
-            // Search for a cookie that starts with the name
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;

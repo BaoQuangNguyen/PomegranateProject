@@ -20,11 +20,11 @@
         <input type="number" id="productivity-seconds" value="0" min="0" max="59">
     </div>
     
-    <button id="start-button">Start Timer</button>
-    <button id="pause-button">Pause Timer</button>
-    <button id="reset-button">Reset Timer</button>
-    <button id="finished-button">Finished Task</button>
-    <button id="start-break-button">Start Break</button>
+    <button id="start-button" class="btn-large waves-effect waves-light orange rounded">Start Timer</button>
+    <button id="pause-button" class="btn-large waves-effect waves-light red rounded" disabled>Pause</button>
+    <button id="reset-button" class="btn-large waves-effect waves-light blue rounded" disabled>Reset</button>
+    <button id="finished-button" onclick="markTaskCompleted()" class="btn-large waves-effect waves-light green rounded" style="display: none;">Finished!</button>
+    <button id="start-break-button" onclick="startBreak()" class="btn-large waves-effect waves-light brown rounded">Break Time!</button>
     
     <p id="update-message" style="display:none;"></p>
 </div>
@@ -71,23 +71,6 @@ function startTimer() {
         } else if (totalTimeInSeconds === 0) {
             clearInterval(timerInterval);
             finishedButton.style.display = 'block';
-
-            fetch(`/update-pomegranates/${task_id}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log('pomegranates_completed updated successfully.');
-                } else {
-                    console.error('Error updating pomegranates_completed.');
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
         }
     }, 1000);
 }
@@ -104,6 +87,7 @@ function resetTimer() {
     startButton.disabled = false;
     pauseButton.disabled = true;
     finishedButton.style.display = 'none';
+    startBreakButton.style.display = 'none';
     productivityMinutesInput.value = 5;
     productivitySecondsInput.value = 0;
     totalTimeInSeconds = 0;
@@ -111,7 +95,25 @@ function resetTimer() {
     updateMessage.style.display = 'none';
 }
 
-
+function markTaskCompleted() {
+    fetch(`/tasks/${task_id}/mark_completed/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Task marked as completed successfully.');
+            window.location.href = `/completedtask/${task_id}/`;
+        } else {
+            console.error('Error marking task as completed.');
+        }
+    })
+    .catch(error => {
+        console.error(error);
+    });
+}
 
 function startBreak() {
     window.location.href = `/breaktimer/?task=${task_id}`;
@@ -120,7 +122,6 @@ function startBreak() {
 startButton.addEventListener('click', startTimer);
 pauseButton.addEventListener('click', pauseTimer);
 resetButton.addEventListener('click', resetTimer);
-finishedButton.addEventListener('click', finishTask);
 startBreakButton.addEventListener('click', startBreak);
 
 function getCookie(name) {

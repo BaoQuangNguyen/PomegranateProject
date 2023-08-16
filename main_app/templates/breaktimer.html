@@ -15,9 +15,8 @@
         <input type="number" id="break-seconds-input" value="0" min="0" max="59">
     </div>
     
-    <button id="start-break-button">Start Timer</button>
-    <button id="finished-break-button">Finished Break</button>
-    <button id="back-to-work-button">Get Back to Work!</button>
+    <button id="start-break-button" class="btn-large waves-effect waves-light brown rounded">Start Timer</button>
+    <button id="back-to-work-button" class="btn-large waves-effect waves-light orange rounded">Get Back to Work!</button>
     
     <p id="break-update-message" style="display:none;"></p>
 </div>
@@ -25,23 +24,17 @@
 <script>
 const timerElement = document.getElementById('break-timer');
 const startButton = document.getElementById('start-break-button');
-const finishedButton = document.getElementById('finished-break-button');
 const backToWorkButton = document.getElementById('back-to-work-button');
 const breakMinutesInput = document.getElementById('break-minutes-input');
 const breakSecondsInput = document.getElementById('break-seconds-input');
 const updateMessage = document.getElementById('break-update-message');
 
-console.log('Script is loaded.');
-
 let timerInterval;
-let totalTimeInSeconds = 0; // Initial value, will be set based on user input
-
+let totalTimeInSeconds = 0;
 let isPaused = false;
 
-// Get the task ID from the URL query parameter
 const urlParams = new URLSearchParams(window.location.search);
 const task_id = urlParams.get('task');
-console.log('Task ID:', task_id);
 
 function updateTimerDisplay(timeInSeconds) {
     const minutes = Math.floor(timeInSeconds / 60);
@@ -50,9 +43,7 @@ function updateTimerDisplay(timeInSeconds) {
 }
 
 function startTimer() {
-    console.log('startTimer function called.');
     startButton.disabled = true;
-    finishedButton.style.display = 'none';
     updateMessage.style.display = 'none';
 
     totalTimeInSeconds = parseInt(breakMinutesInput.value) * 60 + parseInt(breakSecondsInput.value);
@@ -64,32 +55,17 @@ function startTimer() {
             updateTimerDisplay(totalTimeInSeconds);
         } else if (totalTimeInSeconds === 0) {
             clearInterval(timerInterval);
-            finishedButton.style.display = 'block';
-            console.log('Break timer reached 0. Break has finished.');
         }
     }, 1000);
 }
 
 startButton.addEventListener('click', startTimer);
 
-function finishBreak() {
-    console.log('Finished Break button clicked.');
-    // Add any logic you need to finish the break here
-    // For example, update records or perform actions
-    // Redirect back to timer.html with the task ID
-    window.location.href = `/timer/?task=${task_id}`;
-}
-
 function backToWork() {
-    console.log('Get Back to Work button clicked.');
-    // Add any logic you need before redirecting back to the task timer
     window.location.href = `/timer/?task=${task_id}`;
 }
 
-finishedButton.addEventListener('click', finishBreak);
 backToWorkButton.addEventListener('click', backToWork);
-
-// ... (rest of the code)
 </script>
 
 {% endblock %}

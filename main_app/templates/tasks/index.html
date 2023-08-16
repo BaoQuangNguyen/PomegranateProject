@@ -8,8 +8,8 @@
     <div class="card-content">
       <span class="card-title">{{ task.title }}</span>
       <p>Description: {{ task.description }}</p>
-      <a href="{% url 'detail' task.id %}" class="btn">View Details</a>
-      <a href="{% url 'timer' %}?task={{ task.id }}" class="btn">Time to be Productive!</a>
+      <a href="{% url 'detail' task.id %}" class="btn brown">View Details</a>
+      <a href="{% url 'timer' %}?task={{ task.id }}" class="btn brown">Time to be Productive!</a>
     </div>
   </div>
 {% endfor %}

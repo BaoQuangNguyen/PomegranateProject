@@ -79,8 +79,8 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "verceldb",
         "USER": "default",
-        "PASSWORD": "dxL5eg1ZkiFr",
-        "HOST": "ep-rapid-resonance-55185083-pooler.us-east-1.postgres.vercel-storage.com",
+        "PASSWORD": "lgV4Qt5GewYD",
+        "HOST": "ep-super-surf-48191199-pooler.us-east-1.postgres.vercel-storage.com",
     }
 }
 

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <h2>Completed Task</h2>
+    {% if completed_task %}
+    <p>Completed Task: {{ completed_task.task.title }}</p>
+    <p>Description: {{ completed_task.task.description }}</p>
+    <p>Due Date: {{ completed_task.task.due_date }}</p>
+    <p>Completed On: {{ completed_task.completed_at }}</p>
+    {% else %}
+    <p>No completed task available.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

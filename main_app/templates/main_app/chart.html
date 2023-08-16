@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<canvas id="taskChart" width="400" height="100"></canvas>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var ctx = document.getElementById('taskChart').getContext('2d');
+        var labels = [{% for task in tasks %}'{{ task.title }}',{% endfor %}];
+        var data = [{% for task in tasks %}'{{ task.completedtask.completed_at|date:"Y-m-d" }}',{% endfor %}];
+
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Completion Date',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
